@@ -1,0 +1,2 @@
+[raspberrypi3]
+192.168.1.42 ansible_ssh_port=22 ansible_ssh_user=osmc ansible_ssh_pass=osmc

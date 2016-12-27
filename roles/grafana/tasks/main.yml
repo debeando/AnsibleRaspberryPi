@@ -1,0 +1,6 @@
+---
+- name: Install a .deb package from the internet.
+  apt:
+    deb: https://s3.eu-central-1.amazonaws.com/belodetech/grafana_3.0.4_armhf.deb
+  notify:
+    - Restart grafana

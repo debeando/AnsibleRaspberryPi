@@ -1,0 +1,30 @@
+---
+- name: Install
+  apt:
+    name: samba
+    state: present
+  environment:
+    PATH: /usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin
+
+- name: Write the config file
+  copy:
+    src: "{{ role_path }}/files/smb.conf"
+    dest: /etc/samba/smb.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart smbd
+
+- shell: "printf '%s' 'osmc' | iconv -t utf16le | openssl md4 | sed 's/^.* //' | tr '[a-z]' '[A-Z]'"
+  register: smbpasswd_new
+  changed_when: False
+
+- shell: "pdbedit -u osmc -w | awk -F':' '{print $4}'"
+  register: smbpasswd_old
+  changed_when: False
+  ignore_errors: True
+
+- name: Change password for admin user
+  command: (echo 'osmc'; echo 'osmc') | /usr/bin/smbpasswd -s -a osmc
+  when: smbpasswd_new.stdout != smbpasswd_old.stdout

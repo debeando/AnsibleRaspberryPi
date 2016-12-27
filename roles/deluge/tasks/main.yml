@@ -1,0 +1,32 @@
+---
+- name: Install packages
+  action: apt pkg={{ item }} state=present
+  with_items:
+    - deluged
+    - deluge-console
+    - deluge-webui
+  environment:
+    PATH: /usr/local/sbin:/usr/sbin:/sbin:/usr/local/bin:/usr/bin:/bin
+
+- name: Write the config file
+  copy:
+    src: "{{ role_path }}/files/deluged.conf"
+    dest: /etc/default/deluged
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Set config allow remote
+    - Set config download location
+    - Restart deluged
+
+- name: Write the service file for deluge-web
+  copy:
+    src: "{{ role_path }}/files/deluge-web.sh"
+    dest: /etc/init.d/deluge-web
+    owner: root
+    group: root
+    mode: 0755
+  notify:
+    - Update service for deluge-web
+    - Restart deluge-web

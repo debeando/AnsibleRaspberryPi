@@ -1,0 +1,14 @@
+---
+- name: Install a .deb package from the internet.
+  apt:
+    deb: https://dl.influxdata.com/telegraf/releases/telegraf_1.1.1_armhf.deb
+
+- name: Write the config file
+  copy:
+    src: "{{ role_path }}/files/telegraf.conf"
+    dest: /etc/telegraf/telegraf.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart telegraf

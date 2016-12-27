@@ -1,0 +1,14 @@
+---
+- name: Install a .deb package from the internet.
+  apt:
+    deb: https://dl.influxdata.com/influxdb/releases/influxdb_1.1.0_armhf.deb
+
+- name: Write the config file
+  copy:
+    src: "{{ role_path }}/files/influxdb.conf"
+    dest: /etc/influxdb/influxdb.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - Restart influxdb

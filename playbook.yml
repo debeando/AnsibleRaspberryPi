@@ -1,0 +1,9 @@
+---
+- hosts: raspberrypi3
+  roles:
+    - basic
+    - samba
+    - deluge
+    - influxdb
+    - telegraf
+    - grafana
